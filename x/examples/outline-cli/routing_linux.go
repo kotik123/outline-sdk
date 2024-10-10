@@ -105,7 +105,10 @@ func setupIpRule(svrIp string, routingTable, routingPriority int) error {
 
 	// todo: exclude server IP will cause issues when accessing services on the same server,
 	//       use fwmask to protect the shadowsocks socket instead
-	ipRule = netlink.NewRule()
+
+	// You can comment this part to prevent rule creation
+	/*
+	ipRule := netlink.NewRule()
 	ipRule.Priority = routingPriority
 	ipRule.Family = netlink.FAMILY_V4
 	ipRule.Table = routingTable
@@ -116,8 +119,13 @@ func setupIpRule(svrIp string, routingTable, routingPriority int) error {
 		return fmt.Errorf("failed to add IP rule (table %v, dst %v): %w", ipRule.Table, ipRule.Dst, err)
 	}
 	logging.Info.Printf("ip rule 'from all not to %v via table %v' created\n", ipRule.Dst, ipRule.Table)
+	*/
+
+	// Instead, return success without adding the rule
+	logging.Info.Printf("skipped ip rule creation for destination %v via table %v\n", dst, routingTable)
 	return nil
 }
+
 
 func cleanUpRule() error {
 	if ipRule == nil {
